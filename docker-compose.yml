@@ -1,0 +1,63 @@
+version: '3'
+services:
+    app:
+        container_name: testing-app
+        environment:
+            # - db_conn_string=mysql+pymysql://myadmin:password@localhost/testing
+            - DB_CONN_STRING=sqlite:///insurance.db
+            - folder_path=/usr/local/testing/src
+            # mysql://scott:tiger@localhost/test
+            # - folder_path=/AZVOL/testing/src
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: flaskapi:v11
+        working_dir: /usr/local/testing
+        # depends_on: 
+        #     - mysql-testing
+        volumes:
+            - ./src/:/usr/local/testing/src/
+        ports:
+            - "9090:9000"
+        tty: true
+        restart: always
+    # client:
+    #     container_name: react-client
+    #     build:
+    #         context: .
+    #         dockerfile: DockerfileReact
+    #     image: react-flask-app-client
+    #     volumes:
+    #         - ./src/:/usr/local/testing/src/
+    #     ports:
+    #         - "3000:80"
+
+    # mysql-testing:
+    #     image: mysql:8.0
+    #     container_name: mysql-test-db
+    #     environment:
+    #         - MYSQL_USER=myadmin
+    #         - MYSQL_PASSWORD=password
+    #         - MYSQL_DATABASE=testing
+    #         - MYSQL_ROOT_PASSWORD=password
+    #         - MYSQL_MAX_ALLOWED_PACKET=1024M
+    #         - MYSQL_INNODB_BUFFER_POOL_SIZE=1G
+    #         - MYSQL_INNODB_LOG_FILE_SIZE=256M
+    #         - MYSQL_INNODB_LOG_BUFFER_SIZE=256M
+    #     ports:
+    #         - "3308:3306"
+    #     # expose:
+    #     #     - 3306
+    #     depends_on: 
+    #         - mysql-adminer
+    #     volumes:
+    #         - ./data:/var/lib/mysql
+    #     restart: always
+
+    # mysql-adminer:
+    #     image: adminer
+    #     restart: always
+    #     ports:
+    #         - 8001:8080
+    #     # expose:
+    #     #   - 8008
