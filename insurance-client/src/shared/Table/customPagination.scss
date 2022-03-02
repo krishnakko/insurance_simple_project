@@ -1,0 +1,113 @@
+.customPaginationMainDiv {
+  // display: grid;
+  // place-items: end;
+  font-family: "NotoSans-Medium";
+  font-size: 12px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  margin-top: 16px;
+  .leftPart {
+    display: grid;
+    place-items: start;
+    .currentRecInfoDiv {
+      margin: 0px;
+    }
+  }
+  .rightPart {
+    display: grid;
+    place-items: end;
+  }
+  > div {
+    > div {
+      display: flex;
+      align-content: space-between;
+      > div {
+        margin-left: 8px;
+        display: grid;
+        place-items: center;
+      }
+      .pageNavigationDiv {
+        > ul {
+          list-style: none;
+          display: inline;
+          border: 1px solid #d8d8d8;
+          // padding: 5px;
+          > li:first-child {
+            > button:first-child {
+              border-left: none !important;
+            }
+          }
+          > li:last-child {
+            > button:first-child {
+              border-right: none !important;
+            }
+          }
+          > li {
+            display: inline;
+            > button {
+              min-width: 35px;
+              border: none;
+              border-left: 1px solid #d8d8d8 !important;
+              height: 30px;
+              background: #ffffff;
+              &:hover {
+                background-color: #c6eaeb;
+              }
+              > svg {
+                color: #686868;
+              }
+            }
+            // > button:first-child {
+            //   border-left: none !important;
+            // }
+            > button:first-child {
+              border-right: none !important;
+            }
+          }
+        }
+      }
+    }
+  }
+  .pagesDropDownDiv {
+    display: flex;
+    div {
+      border-radius: 0px !important;
+    }
+    > div {
+      background-color: #fff;
+      margin-left: 8px !important;
+    }
+    > span:first-child {
+      padding-right: 5px;
+    }
+    input[type="text"] {
+      padding: 0px !important;
+      padding-left: 5px !important;
+      height: 33px;
+      font-size: 12px;
+    }
+    > div {
+      margin: 0px;
+      width: 60px;
+    }
+    svg {
+      width: 20px;
+    }
+  }
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  svg {
+    opacity: 0.5;
+  }
+}
+
+.active {
+  > button {
+    background-color: #c6eaeb !important;
+    pointer-events: none;
+  }
+}

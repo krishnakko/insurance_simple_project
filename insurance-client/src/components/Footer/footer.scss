@@ -1,0 +1,35 @@
+.footerWrapper {
+  //   background-color: #f7f7f7;
+  position: relative;
+  margin-top: auto;
+  bottom: 20px;
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 24px;
+    // height: 44px;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    align-items: center;
+    color: #424242;
+    font-family: NotoSans-Light;
+    // > div {
+    //   display: flex;
+    //   align-items: center;
+    // }
+    .leftDiv {
+      .copyRight {
+        font-size: 14px;
+      }
+      span {
+        padding: 5px;
+      }
+    }
+    .rightDiv {
+      span:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

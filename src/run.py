@@ -3,9 +3,11 @@ import json
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 import os
+from flask_cors import CORS
 from sqlalchemy import or_
 
 app = Flask(__name__)
+CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DB_CONN_STRING")
 app.config['SECRET_KEY'] = "krishna971"
 
@@ -56,10 +58,15 @@ class Policy(db.Model):
     #         self.date_of_purchase, self.customer_id, self.fuel, self.vehicle_segment)
 
 
+def convert_date(date):
+    return date.strftime("%Y-%m-%d")
+
+
 def return_multi_records(records):
     return_list = []
     for rec in records:
         record = rec.__dict__
+        record["date_of_purchase"] = convert_date(record["date_of_purchase"])
         del record['_sa_instance_state']
         return_list.append(record)
     return return_list
@@ -67,6 +74,7 @@ def return_multi_records(records):
 
 def return_record(rec, ref=False):
     record = rec.__dict__
+    record["date_of_purchase"] = convert_date(record["date_of_purchase"])
     if ref:
         return record
     del record['_sa_instance_state']
@@ -74,7 +82,7 @@ def return_record(rec, ref=False):
 
 
 @app.route('/policies', methods=['GET'])
-def get_all_policies(request):
+def get_all_policies():
     offset = request.args["offset"] if "offset" in request.args else 0
     limit = request.args["limit"] if "limit" in request.args else 25
     no_limit = request.args["no_limit"] if "no_limit" in request.args else 0
@@ -85,6 +93,7 @@ def get_all_policies(request):
         policies = Policy.query.offset(offset).limit(limit).all()
     count = Policy.query.count()
     policies_final = return_multi_records(policies)
+
     response = {
         "count": count,
         "data": policies_final
