@@ -1,10 +1,12 @@
 import React from 'react';
+import { useHistory } from "react-router-dom";
 import TableComponent from '../../shared/Table/tableComponent';
 import './insurance.scss';
 
 
 function InsuranceTable(props) {
     const { data, loadingData } = props;
+    const history = useHistory();
     const columns = React.useMemo(
         () => [
             {
@@ -87,6 +89,9 @@ function InsuranceTable(props) {
         ],
         []
     )
+    const redirectToEdit = (id) => {
+        history.push(`/policy/${id}/edit`);
+    }
 
     return (
         <TableComponent
@@ -96,7 +101,7 @@ function InsuranceTable(props) {
             loadingData={loadingData}
             paginationData={props.paginationData}
             paginationHandling={props.paginationHandling}
-            handleEdit={props.handleEdit}
+            handleEdit={redirectToEdit}
         />
     );
 }

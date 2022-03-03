@@ -90,7 +90,6 @@ function Insurance(props) {
 
     return (
         <div className="insuranceMainClass">
-            {/* <span className="Header">Insurance</span> */}
             <div className="input-group tableSearch">
                 <input
                     type="text"

@@ -4,9 +4,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  min-height: 100vh;
+  // min-height: 100vh;
   margin: 0 5% !important;
   position: relative;
+  background: #ebebe6 !important;
 }
 * {
   margin: 0;
@@ -19,7 +20,7 @@ code {
     monospace;
 }
 
-// #root {
-//   min-height: 100%;
-//   display: flex;
-// }
+#root {
+  min-height: 100%;
+  display: flex;
+}

@@ -1,4 +1,4 @@
-import { Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import { ThemeProvider } from "@material-ui/core/styles";
 import './App.scss';
 import Insurance from './components/Insurance/insurance'
@@ -13,17 +13,19 @@ function App() {
     <ThemeProvider theme={Apptheme}>
       <div className="App">
         <header className="pageContainer">
-          <div className="d-flex width-100 height-100 page-Wrapper">
+          <div className="page-Wrapper">
             <Header />
-            <Route exact path="/">
-              <Insurance />
-            </Route>
-            <Route exact path="/policy/:policyId/edit">
-              <AddOrEditPolicy action="edit" />
-            </Route>
-            <Footer />
+            <Switch>
+              <Route exact path="/">
+                <Insurance />
+              </Route>
+              <Route exact path="/policy/:policyId/edit">
+                <AddOrEditPolicy action="edit" />
+              </Route>
+            </Switch>
           </div>
         </header>
+        <Footer />
       </div>
     </ThemeProvider>
   );
