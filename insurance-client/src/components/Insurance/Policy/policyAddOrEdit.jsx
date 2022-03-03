@@ -3,72 +3,21 @@ import { useLocation, useParams } from "react-router-dom";
 
 import * as styles from '@material-ui/core/styles';
 import * as core from '@material-ui/core';
-import { Autocomplete } from "@material-ui/lab";
-import MuiAccordion from '@material-ui/core/Accordion';
-import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
-import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import * as icons from '@material-ui/icons';
-import Moment from 'moment';
 import { Formik, Form, getIn, ErrorMessage } from "formik";
-import { Route, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import * as Yup from 'yup';
 import * as _ from 'lodash';
-import moment from "moment";
 
 import './policyAddOrEdit.scss'
 import { LoadingView } from '../../Loader/loader';
 import { getPolicyDetails, updatePolicy } from '../../../requests';
 // let selProductId = "";
-import Box from '@mui/material/Box';
-import Slider from '@mui/material/Slider';
-
-function valuetext(value) {
-    return `${value}°C`;
-}
 
 const yupValidationSchema = Yup.object().shape({
     customer_id: Yup.number().required('Customer ID can not be blank'),
     premium: Yup.number().max(1000000).required('Required'),
 })
-
-
-const Accordion = styles.withStyles({
-    root: {
-        boxShadow: 'none',
-        '&:not(:last-child)': {
-            borderBottom: 0,
-        },
-        '&:before': {
-            display: 'none',
-        },
-        '&$expanded': {
-            margin: 'auto',
-        },
-    },
-    expanded: {},
-})(MuiAccordion);
-
-const AccordionSummary = styles.withStyles({
-    root: {
-        marginBottom: -1,
-        minHeight: 56,
-        '&$expanded': {
-            minHeight: 56,
-        },
-    },
-    content: {
-        '&$expanded': {
-            margin: '12px 0',
-        },
-    },
-    expanded: {},
-})(MuiAccordionSummary);
-
-const AccordionDetails = styles.withStyles((theme) => ({
-    root: {
-        padding: theme.spacing(2),
-    },
-}))(MuiAccordionDetails);
 
 
 
@@ -124,7 +73,6 @@ export default function AddOrEditPolicy(props) {
     const [policyData, setPolicyData] = useState({});
     const [loader, setLoader] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-    const currentDate = new Date();
     const classes = useStyles();
 
 
@@ -155,11 +103,6 @@ export default function AddOrEditPolicy(props) {
                 setIsLoading(false);
                 navigateToPolicyTable();
             }
-
-            // updated.then(data => {
-            //     setIsLoading(false);
-            //     history.push('/');
-            // })
         }
     }
     useEffect(() => {
@@ -445,13 +388,6 @@ export default function AddOrEditPolicy(props) {
                                                                 onBlur={handleBlur}
                                                             />
                                                         </styles.ThemeProvider>
-                                                        {/* <ErrorMessage
-                                                        name="userdetails.rowRight"
-                                                        component="span"
-                                                        className={`error-message
-                                                    ${values.userdetails.rowRight === "" ? "displayNone" : ""}
-                                        `}
-                                                    /> */}
                                                     </div>
                                                 </div>
                                                 <div className="rowDiv">
@@ -469,13 +405,6 @@ export default function AddOrEditPolicy(props) {
                                                             />
 
                                                         </styles.ThemeProvider>
-                                                        {/* <ErrorMessage
-                                                        name="userdetails.rowLeft"
-                                                        component="span"
-                                                        className={`error-message
-                                                        ${values.userdetails.rowLeft === "" ? "displayNone" : ""}
-                                                    `}
-                                                    /> */}
                                                     </div>
                                                     <div className="classTypeDropdown firstPartDiv">
                                                         <core.FormControl variant="outlined" className={`${classes.formControl}`}>
@@ -529,7 +458,6 @@ export default function AddOrEditPolicy(props) {
                                                     </div>
                                                 </div>
                                                 <div className="addEditPolicyAction">
-                                                    {/* {console.log("isValid && dirty && uniqueUsername && !emptyLicense && validCF, fieldChanged, allNumbersValid", isValid, dirty, uniqueUsername, !emptyLicense, validCF, fieldChanged, allNumbersValid)} */}
                                                     {
                                                         action === "create" ?
                                                             <core.Button
@@ -546,7 +474,6 @@ export default function AddOrEditPolicy(props) {
                                                                 variant="contained"
                                                                 type="submit"
                                                                 id="actionButton"
-                                                                // disabled={isValid && dirty}
                                                                 disabled={!(isValid && dirty)}
                                                             >
                                                                 Update
