@@ -1,5 +1,5 @@
 import CircularProgress from '@material-ui/core/CircularProgress'
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React from 'react';
 import "./loader.scss";
 
