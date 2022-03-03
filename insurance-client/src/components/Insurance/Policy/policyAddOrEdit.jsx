@@ -10,6 +10,7 @@ import * as Yup from 'yup';
 import { getPolicyDetails, updatePolicy } from '../../../requests';
 import { LoadingView } from '../../Loader/loader';
 import './policyAddOrEdit.scss';
+import { policyTableFieldsWithProps } from './constantFields';
 
 const yupValidationSchema = Yup.object().shape({
     customer_id: Yup.number().required('Customer ID can not be blank'),
@@ -119,29 +120,80 @@ export default function AddOrEditPolicy(props) {
         })
     }, [policyID])
 
-    const createTextField = (handleChange, values, handleBlur, fieldProps = {}) => {
-        fieldProps = { "name": "customer_id", value: values["customer_id"], "label": "Customer ID" };
+    const policyFieldMapping = (handleChange, values, handleBlur, errors, touched, setFieldValue, fieldProps) => {
+        const { name, type, label, options, max, disabled, error_message } = fieldProps;
+        if (type === "dropdown") {
+            return <div className="fieldWrap">
+                <core.FormControl variant="outlined" className={`${classes.formControl}`}>
+                    <core.InputLabel id="demo-simple-select-outlined-label">{label}</core.InputLabel>
+                    <core.Select
+                        disabled={disabled ? disabled : false}
+                        labelId="demo-simple-select-outlined-label"
+                        id={name}
+                        name={name}
+                        label={label}
+                        value={values[name]}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={`dropdownMUI ${getIn(errors, name) && getIn(touched, name)
+                            ? "requiredError" : ""}`}
+                    >
+                        {
+                            options.map((val, idx) => {
+                                return <core.MenuItem key={idx} value={val["value"]}>{val["label"]}</core.MenuItem>
+                            })
+                        }
 
-        return <div className="fieldWrap">
-            <styles.ThemeProvider theme={theme2}>
-                <core.TextField
-                    autoComplete="off"
-                    id={fieldProps["name"]}
-                    label={fieldProps["label"]}
-                    variant="outlined"
-                    name={fieldProps["name"]}
-                    value={fieldProps["value"]}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                />
+                    </core.Select>
+                </core.FormControl>
+                {error_message && <ErrorMessage
+                    name={name}
+                    component="span"
+                    className={`error-message`}
+                />}
 
-            </styles.ThemeProvider>
-            <ErrorMessage
-                name="customer_id"
-                component="span"
-                className={`error-message`}
-            />
-        </div>
+            </div>
+        } else if (type === "slider") {
+            return <div className="fieldWrap">
+                <Box sx={{ width: 300 }}>
+                    <label>{label}</label>
+                    <Slider
+                        max={max}
+                        getAriaLabel={() => label}
+                        value={incomeRange}
+                        onChange={(event, value) => {
+                            setIncomeRange(value);
+                            const range = "$" + value[0] + " - $" + value[1] + "K";
+                            setFieldValue(name, range);
+                        }}
+                        valueLabelDisplay="auto"
+                        getAriaValueText={valuetext}
+                    />
+                </Box>
+            </div>
+        } else {
+            return <div className="fieldWrap">
+                <styles.ThemeProvider theme={theme2}>
+                    <core.TextField
+                        disabled={disabled ? disabled : false}
+                        autoComplete="off"
+                        id={name}
+                        label={label}
+                        variant="outlined"
+                        type={type}
+                        name={name}
+                        value={values[name]}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                    />
+                </styles.ThemeProvider>
+                {error_message && <ErrorMessage
+                    name={name}
+                    component="span"
+                    className={`error-message`}
+                />}
+            </div>
+        }
     }
 
     return (
@@ -188,329 +240,11 @@ export default function AddOrEditPolicy(props) {
                                         <div className="policyForm">
                                             <div>Policy</div>
                                             <div className="rowDiv flex-container">
-                                                <div className="fieldWrap">
-                                                    <styles.ThemeProvider theme={theme2}>
-                                                        <core.TextField
-                                                            autoComplete="off"
-                                                            id="customer-id"
-                                                            label="Customer ID"
-                                                            variant="outlined"
-                                                            name="customer_id"
-                                                            value={values.customer_id}
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                        />
-
-                                                    </styles.ThemeProvider>
-                                                    <ErrorMessage
-                                                        name="customer_id"
-                                                        component="span"
-                                                        className={`error-message`}
-                                                    />
-                                                </div>
-                                                <div className="fieldWrap">
-                                                    <core.FormControl variant="outlined" className={`${classes.formControl}`}>
-                                                        <core.InputLabel id="demo-simple-select-outlined-label">Vehicle Segment</core.InputLabel>
-                                                        <core.Select
-                                                            labelId="demo-simple-select-outlined-label"
-                                                            id="vehicle-segment"
-                                                            name="vehicle_segment"
-                                                            label="Vehicle Segment"
-                                                            value={values.vehicle_segment}
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                            className={`dropdownMUI
-                                                                                ${getIn(errors, "vehicle_segment") &&
-                                                                    getIn(touched, "vehicle_segment")
-                                                                    ? "requiredError"
-                                                                    : ""}
-                                                                            `}
-                                                        >
-                                                            {
-                                                                ["A", "B", "C"].map((val, idx) => {
-                                                                    return <core.MenuItem key={idx} value={val}>{val}</core.MenuItem>
-                                                                })
-                                                            }
-
-                                                        </core.Select>
-                                                    </core.FormControl>
-                                                </div>
-                                                <div className="fieldWrap">
-                                                    <styles.ThemeProvider theme={theme2}>
-                                                        <core.TextField
-                                                            autoComplete="off"
-                                                            id="fuel"
-                                                            label="Fuel"
-                                                            variant="outlined"
-                                                            name="fuel"
-                                                            value={values.fuel}
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                        />
-                                                    </styles.ThemeProvider>
-                                                </div>
-                                                <div className="fieldWrap">
-                                                    <styles.ThemeProvider theme={theme2}>
-                                                        <core.TextField
-                                                            autoComplete="off"
-                                                            id="premium"
-                                                            label="Premium"
-                                                            variant="outlined"
-                                                            name="premium"
-                                                            value={values.premium}
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                        />
-                                                    </styles.ThemeProvider>
-                                                    <ErrorMessage
-                                                        name="premium"
-                                                        component="span"
-                                                        className={`error-message`}
-                                                    />
-                                                </div>
-                                                <div className="fieldWrap">
-                                                    <core.FormControl variant="outlined" className={`${classes.formControl}`}>
-                                                        <core.InputLabel id="demo-simple-select-outlined-label">Bodily Injury Liability</core.InputLabel>
-                                                        <core.Select
-                                                            labelId="demo-simple-select-outlined-label"
-                                                            id="bodily-injury-liability"
-                                                            name="bodily_injury_liability"
-                                                            label="Bodily Injury Liability"
-                                                            value={values.bodily_injury_liability}
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                            className={`dropdownMUI
-                                                                                ${getIn(errors, "bodily_injury_liability") &&
-                                                                    getIn(touched, "bodily_injury_liability")
-                                                                    ? "requiredError"
-                                                                    : ""}
-                                                                            `}
-                                                        >
-                                                            {
-                                                                booleanSelect.map((status, idx) => {
-                                                                    return <core.MenuItem key={idx} value={status.value}>{status.label}</core.MenuItem>
-                                                                })
-                                                            }
-
-                                                        </core.Select>
-                                                    </core.FormControl>
-                                                </div>
-                                                <div className="fieldWrap">
-                                                    <core.FormControl variant="outlined" className={`${classes.formControl}`}>
-                                                        <core.InputLabel id="demo-simple-select-outlined-label">Personal Injury Protection</core.InputLabel>
-                                                        <core.Select
-                                                            labelId="demo-simple-select-outlined-label"
-                                                            id="personal-injury-protection"
-                                                            name="personal_injury_protection"
-                                                            label="Personal Injury Protection"
-                                                            value={values.personal_injury_protection}
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                            className={`dropdownMUI ${getIn(errors, "personal_injury_protection") &&
-                                                                getIn(touched, "personal_injury_protection")
-                                                                ? "requiredError"
-                                                                : ""}`}
-                                                        >
-                                                            {
-                                                                booleanSelect.map((status, idx) => {
-                                                                    return <core.MenuItem key={idx} value={status.value}>{status.label}</core.MenuItem>
-                                                                })
-                                                            }
-
-                                                        </core.Select>
-                                                    </core.FormControl>
-                                                </div>
-                                                <div className="fieldWrap">
-                                                    <core.FormControl variant="outlined" className={`${classes.formControl}`}>
-                                                        <core.InputLabel id="demo-simple-select-outlined-label">Property Damage Liability</core.InputLabel>
-                                                        <core.Select
-                                                            labelId="demo-simple-select-outlined-label"
-                                                            id="property-damage-liability"
-                                                            name="property_damage_liability"
-                                                            label="Property Damage Liability"
-                                                            value={values.property_damage_liability}
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                            className={`dropdownMUI ${getIn(errors, "property_damage_liability") &&
-                                                                getIn(touched, "property_damage_liability")
-                                                                ? "requiredError"
-                                                                : ""}`}
-                                                        >
-                                                            {
-                                                                booleanSelect.map((status, idx) => {
-                                                                    return <core.MenuItem key={idx} value={status.value}>{status.label}</core.MenuItem>
-                                                                })
-                                                            }
-
-                                                        </core.Select>
-                                                    </core.FormControl>
-                                                </div>
-                                                <div className="fieldWrap">
-                                                    <core.FormControl variant="outlined" className={`${classes.formControl}`}>
-                                                        <core.InputLabel id="demo-simple-select-outlined-label">Collision</core.InputLabel>
-                                                        <core.Select
-                                                            labelId="demo-simple-select-outlined-label"
-                                                            id="collision"
-                                                            name="collision"
-                                                            label="Collision"
-                                                            value={values.collision}
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                            className={`dropdownMUI ${getIn(errors, "collision") &&
-                                                                getIn(touched, "collision")
-                                                                ? "requiredError"
-                                                                : ""}`}
-                                                        >
-                                                            {
-                                                                booleanSelect.map((status, idx) => {
-                                                                    return <core.MenuItem key={idx} value={status.value}>{status.label}</core.MenuItem>
-                                                                })
-                                                            }
-
-                                                        </core.Select>
-                                                    </core.FormControl>
-                                                </div>
-                                                <div className="fieldWrap">
-                                                    <core.FormControl variant="outlined" className={`${classes.formControl}`}>
-                                                        <core.InputLabel id="demo-simple-select-outlined-label">Comprehensive</core.InputLabel>
-                                                        <core.Select
-                                                            labelId="demo-simple-select-outlined-label"
-                                                            id="comprehensive"
-                                                            name="comprehensive"
-                                                            label="Comprehensive"
-                                                            value={values.comprehensive}
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                            className={`dropdownMUI ${getIn(errors, "comprehensive") &&
-                                                                getIn(touched, "comprehensive")
-                                                                ? "requiredError"
-                                                                : ""}`}
-                                                        >
-                                                            {
-                                                                booleanSelect.map((status, idx) => {
-                                                                    return <core.MenuItem key={idx} value={status.value}>{status.label}</core.MenuItem>
-                                                                })
-                                                            }
-
-                                                        </core.Select>
-                                                    </core.FormControl>
-                                                </div>
-                                                <div className="fieldWrap">
-                                                    <styles.ThemeProvider theme={theme2}>
-                                                        <core.TextField
-                                                            disabled
-                                                            required
-                                                            type="date"
-                                                            id="date_of_purchase"
-                                                            label="Date of purchase"
-                                                            variant="outlined"
-                                                            name="date_of_purchase"
-                                                            value={values.date_of_purchase}
-                                                            InputLabelProps={{
-                                                                shrink: true
-                                                            }}
-                                                        // onBlur={handleBlur}
-                                                        />
-                                                    </styles.ThemeProvider>
-                                                </div>
-                                                <div className="fieldWrap">
-                                                    <styles.ThemeProvider theme={theme2}>
-                                                        <core.TextField
-                                                            disabled
-                                                            autoComplete="off"
-                                                            id="customer-income-group"
-                                                            label="Customer Income Group"
-                                                            variant="outlined"
-                                                            name="customer_income_group"
-                                                            value={values.customer_income_group}
-                                                            // onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                        />
-                                                    </styles.ThemeProvider>
-                                                </div>
-                                                <div className="fieldWrap">
-                                                    <Box sx={{ width: 300 }}>
-                                                        <label>Select Income Range</label>
-                                                        <Slider
-                                                            max={500}
-                                                            getAriaLabel={() => 'Income Group'}
-                                                            value={incomeRange}
-                                                            onChange={(event, value) => {
-                                                                setIncomeRange(value);
-                                                                const range = "$" + value[0] + " - $" + value[1] + "K";
-                                                                setFieldValue("customer_income_group", range);
-                                                            }}
-                                                            valueLabelDisplay="auto"
-                                                            getAriaValueText={valuetext}
-                                                        />
-                                                    </Box>
-
-                                                </div>
-                                                <div className="fieldWrap">
-                                                    <styles.ThemeProvider theme={theme2}>
-                                                        <core.TextField
-                                                            autoComplete="off"
-                                                            id="customer-region"
-                                                            label="Customer Region"
-                                                            variant="outlined"
-                                                            name="customer_region"
-                                                            value={values.customer_region}
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                        />
-
-                                                    </styles.ThemeProvider>
-                                                </div>
-                                                <div className="fieldWrap">
-                                                    <core.FormControl variant="outlined" className={`${classes.formControl}`}>
-                                                        <core.InputLabel id="demo-simple-select-outlined-label">Customer gender</core.InputLabel>
-                                                        <core.Select
-                                                            labelId="demo-simple-select-outlined-label"
-                                                            id="customer-gender"
-                                                            name="customer_gender"
-                                                            label="Customer gender"
-                                                            value={values.customer_gender}
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                            className={`dropdownMUI ${getIn(errors, "customer_gender") &&
-                                                                getIn(touched, "customer_gender")
-                                                                ? "requiredError"
-                                                                : ""}`}
-                                                        >
-                                                            {
-                                                                genders.map((gender, idx) => {
-                                                                    return <core.MenuItem key={idx} value={gender}>{gender}</core.MenuItem>
-                                                                })
-                                                            }
-
-                                                        </core.Select>
-                                                    </core.FormControl>
-                                                </div>
-                                                <div className="fieldWrap">
-                                                    <core.FormControl variant="outlined" className={`${classes.formControl}`}>
-                                                        <core.InputLabel id="demo-simple-select-outlined-label">Customer marital status</core.InputLabel>
-                                                        <core.Select
-                                                            labelId="demo-simple-select-outlined-label"
-                                                            id="customer-marital-status"
-                                                            name="comprehensive"
-                                                            label="Customer marital status"
-                                                            value={values.customer_marital_status}
-                                                            onChange={handleChange}
-                                                            onBlur={handleBlur}
-                                                            className={`dropdownMUI ${getIn(errors, "customer_marital_status") &&
-                                                                getIn(touched, "customer_marital_status")
-                                                                ? "requiredError"
-                                                                : ""}`}
-                                                        >
-                                                            {
-                                                                maritalStatus.map((status, idx) => {
-                                                                    return <core.MenuItem key={idx} value={status.value}>{status.label}</core.MenuItem>
-                                                                })
-                                                            }
-
-                                                        </core.Select>
-                                                    </core.FormControl>
-                                                </div>
+                                                {policyTableFieldsWithProps.map((field, index) => {
+                                                    return <React.Fragment key={index}>
+                                                        {policyFieldMapping(handleChange, values, handleBlur, errors, touched, setFieldValue, field)}
+                                                    </React.Fragment>
+                                                })}
                                             </div>
                                             <div className="addEditPolicyAction">
                                                 {
