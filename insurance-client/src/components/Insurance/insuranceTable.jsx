@@ -91,8 +91,11 @@ function InsuranceTable(props) {
     return (
         <TableComponent
             columns={columns}
+            name={"InsuranceTable"}
             data={data}
             loadingData={loadingData}
+            paginationData={props.paginationData}
+            paginationHandling={props.paginationHandling}
         />
     );
 }

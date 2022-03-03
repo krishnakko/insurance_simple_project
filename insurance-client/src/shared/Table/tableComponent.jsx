@@ -9,6 +9,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import './tableComponent.scss';
 import { TransparentLoader } from '../../components/Loader/loader';
+import { CustomPagination } from './customPagination';
 
 // const columns = [
 //     { id: 'name', label: 'Name', minWidth: 170 },
@@ -38,7 +39,9 @@ import { TransparentLoader } from '../../components/Loader/loader';
 
 
 export default function TableComponent(props) {
-    const { columns, data, } = props;
+    const { columns, data } = props;
+    const records = data["data"] ? data["data"] : [];
+    const recordCount = data["count"] ? data["count"] : 0;
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -62,6 +65,8 @@ export default function TableComponent(props) {
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
+                                {/* {props.name === "InsuranceTable" &&
+                                    <TableCell align="left">Actions</TableCell>} */}
                                 {columns.map((column) => (
                                     <TableCell
                                         key={column.id}
@@ -79,19 +84,19 @@ export default function TableComponent(props) {
                                 <div className="transparentLoader"><TransparentLoader /></div>
                             }
                             {
-                                props.loadingData && props.data.length < 1 ?
+                                props.loadingData && records.length < 1 ?
                                     <div className="insideTableLoader"></div>
                                     // ""
                                     :
-                                    data.length < 1 ?
+                                    records.length < 1 ?
                                         <React.Fragment>
                                             {
-                                                data.length < 1 ?
+                                                records.length < 1 ?
                                                     <div className="noRecordsDiv"></div> : ""
                                             }
                                         </React.Fragment>
                                         : <React.Fragment>
-                                            {data
+                                            {records
                                                 .map((row) => {
                                                     return (
                                                         <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
@@ -113,6 +118,7 @@ export default function TableComponent(props) {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                {recordCount > 0 && <CustomPagination paginationHandling={props.paginationHandling} paginationData={props.paginationData} />}
             </Paper>
         </div>
     );

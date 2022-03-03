@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import { getAllPolicies, searchAllPolicies } from '../../requests';
 import InsuranceTable from './insuranceTable';
 import './insurance.scss';
 
 function Insurance(props) {
     let typingTimer;
-    const [policies, setPolicies] = useState([]);
+    const [policies, setPolicies] = useState({});
     const [searchQuery, setSearchQuery] = useState("");
     const [loadingData, setLoadingData] = useState(true);
     const [searchClicked, setSearchClicked] = useState(false);
+    const [paginationData, setPaginationData] = useState({ "limit": 10, "offset": 0, "count": 0 });
 
     const policySearch = async (event) => {
         setSearchClicked(true);
@@ -19,12 +20,21 @@ function Insurance(props) {
             setSearchQuery(id);
         }
     }
-    React.useEffect(() => {
+    useEffect(() => {
         if (searchClicked) {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
             typingTimer = setTimeout(async () => {
                 setLoadingData(true);
-                const data = await searchAllPolicies({ query_id: searchQuery });
-                setPolicies(data["data"]);
+                let data = {};
+                let payload = { "limit": 10, "offset": 0 };
+                if (searchQuery === "") {
+                    data = await getAllPolicies(payload);
+                } else {
+                    payload["query_id"] = searchQuery;
+                    data = await searchAllPolicies(payload);
+                }
+                setPaginationData({ ...paginationData, offset: payload.offset, limit: payload.limit });
+                setPolicies(data);
                 setLoadingData(false);
             }, 1000);
         }
@@ -32,9 +42,42 @@ function Insurance(props) {
 
     useEffect(() => {
         setLoadingData(true);
-        getAllPolicies().then(data => setPolicies(data["data"]));
-        setLoadingData(false);
+        getAllPolicies(paginationData).then(data => {
+            setPolicies(data);
+            setLoadingData(false);
+            setPaginationData({ ...paginationData, count: data["count"] })
+        });
     }, [])
+
+    // useEffect(() => {
+    //     let pgData = {};
+    //     const oldFilters = { ...filters };
+    //     pgData["offset"] = oldFilters.offset;
+    //     pgData["limit"] = oldFilters.limit;
+    //     setPaginationData(pgData);
+    // }, []);
+
+    useEffect(() => {
+        let pgData = { ...paginationData };
+        pgData["count"] = policies.count;
+        setPaginationData(pgData);
+    }, [policies])
+
+    const paginationHandling = async (pager) => {
+        console.log("pagination", pager);
+        let payload = { offset: pager.startIndex, limit: pager.pageSize };
+        let data = {};
+        console.log("payload", payload)
+        if (searchQuery !== "") {
+            payload["query_id"] = searchQuery;
+            data = await searchAllPolicies(payload);
+        } else {
+            data = await getAllPolicies(payload);
+        }
+        payload["count"] = data["count"];
+        setPaginationData(payload)
+        setPolicies(data);
+    }
 
     // useEffect(() => {
     //     searchAllPolicies({ query_id: searchQuery })
@@ -54,7 +97,13 @@ function Insurance(props) {
                     onChange={policySearch}
                 />
             </div>
-            <InsuranceTable data={policies} loadingData={loadingData} />
+            {console.log("paginationData", paginationData)}
+            <InsuranceTable
+                data={policies}
+                loadingData={loadingData}
+                paginationData={paginationData}
+                paginationHandling={paginationHandling}
+            />
         </div>
     )
 

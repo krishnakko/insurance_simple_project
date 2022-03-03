@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import "./customPagination.scss";
 
 
-const BootstrapInput = styles.withStyles((theme: styles.Theme) =>
+const BootstrapInput = styles.withStyles((theme) =>
     styles.createStyles({
         root: {
             'label + &': {
@@ -45,7 +45,7 @@ const BootstrapInput = styles.withStyles((theme: styles.Theme) =>
     }),
 )(InputBase);
 
-const useStyles = styles.makeStyles((theme: styles.Theme) =>
+const useStyles = styles.makeStyles((theme) =>
     styles.createStyles({
         margin: {
             margin: theme.spacing(1),
@@ -53,15 +53,11 @@ const useStyles = styles.makeStyles((theme: styles.Theme) =>
     }),
 );
 
-export function CustomPagination(props: any) {
+export function CustomPagination(props) {
     // console.log("paginationData**", props.paginationData);
     const classes = useStyles();
-    let typingTimer;
-    const [searchClicked, setSearchClicked] = useState(false);
     const [pageSize, setPageSize] = useState(10);
     const pageSizes = [5, 10, 25, 50, 100];
-    const [pageNumber, setPageNumber] = useState<any>(0);
-    const [pageNumberInput, setPageNumberInput] = useState("");
     const [pager, setPager] = useState({
         totalItems: 0,
         currentPage: 1,
@@ -73,41 +69,31 @@ export function CustomPagination(props: any) {
         endIndex: 10,
         pages: [1, 2, 3]
     });
-    // const [initialPage, setInitialPage]=useState(1);
 
     useEffect(() => {
         const pgData = props.paginationData;
-        // console.log("Rerendering", pgData);
-        let totalPages: any = 0;
-        let currentPage: number = pager.currentPage;
+        let currentPage = pager.currentPage;
         let pageSizeN = pager.pageSize;
         if (pgData.offset === 0 || !pgData.offset) {
             currentPage = 1;
         } else {
             currentPage = Math.ceil(pgData.offset / pgData.limit) + 1;
         }
-        // if (pgData.limit !== 10) {
-        //     pageSizeN = pgData.limit;
-        // }
         pageSizeN = pgData.limit;
         setPageSize(pageSizeN);
-        if (pgData.count > 0) {
-            totalPages = Math.ceil(pgData.count / pgData.limit);
-        }
-        setPageNumber(currentPage);
-        setPageNumberInput(currentPage.toString());
-        // console.log("pgData.count, currentPage, pager.pageSize", pgData.count, currentPage, pageSize);
+        console.log("pagerObj pgData.count, currentPage, pageSizeN", pgData.count, currentPage, pageSizeN)
         const pagerObj = getPager(pgData.count, currentPage, pageSizeN);
+        console.log("pagerObj", pagerObj)
         setPager(pagerObj);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.paginationData])
 
-    const setPage = (pageNum, pageNewSize?) => {
+    const setPage = (pageNum, pageNewSize = pager.pageSize) => {
         if (pageNum === pager.currentPage) {
             return false;
         }
-        // console.log("setPage pageNum pageNewSize", pageNum, pageNewSize, props.paginationData);
         var pgData = props.paginationData;
-        let pagerObj: any = {};
+        let pagerObj = {};
         if (pageNum) {
             pagerObj = getPager(pgData.count, pageNum, pageSize);
         } else {
@@ -166,35 +152,6 @@ export function CustomPagination(props: any) {
         };
     }
 
-    React.useEffect(() => {
-        if (searchClicked && pageNumber > 0) {
-            typingTimer = setTimeout(async () => {
-                setPage(pageNumber);
-            }, 1000);
-        }
-    }, [pageNumber])
-
-    const goToPage = (e) => {
-        setSearchClicked(true);
-        clearTimeout(typingTimer);
-        let page: any;
-        if (/[^0-9]+/.test(e.target.value)) {
-            e.target.value = e.target.value.replace(/[^0-9]*/g, "")
-            page = e.target.value ? Number(e.target.value) : 0;
-        } else {
-            page = e.target.value ? Number(e.target.value) : 0;
-        }
-        setPageNumberInput(e.target.value);
-        if (page >= pager.totalPages) {
-            page = pager.totalPages;
-            setPageNumber(page);
-            setTimeout(() => {
-                setPageNumberInput(pager.totalPages.toString());
-            }, 1000)
-        } else {
-            setPageNumber(page);
-        }
-    }
 
     return (
         <div className="customPaginationMainDiv">
@@ -224,18 +181,6 @@ export function CustomPagination(props: any) {
             </div>
             <div className="rightPart">
                 <div>
-                    <div className="pagesDropDownDiv">
-                        <span>{"Go to page:  "}</span>
-                        <TextField
-                            id="page-number"
-                            // label="Page number"
-                            variant="outlined"
-                            autoComplete="off"
-                            value={pageNumberInput}
-                            name="page-number"
-                            onChange={(e) => goToPage(e)}
-                        />
-                    </div>
                     <div className="pageNavigationDiv">
                         <ul>
                             <li className={pager.currentPage === 1 ? 'disabled' : ''}>

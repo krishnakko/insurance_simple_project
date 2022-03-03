@@ -1,8 +1,8 @@
 const API_PATH = "http://localhost:9090"
 
-export const getAllPolicies = async () => {
+export const getAllPolicies = async (payload) => {
     console.log("response")
-    let response = await fetch(API_PATH + "/policies");
+    let response = await fetch(API_PATH + "/policies?" + new URLSearchParams(payload));
     console.log("response", response);
     let data = await response.json();
     return data;
