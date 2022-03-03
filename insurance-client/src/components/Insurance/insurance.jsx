@@ -64,10 +64,8 @@ function Insurance(props) {
     }, [policies])
 
     const paginationHandling = async (pager) => {
-        console.log("pagination", pager);
         let payload = { offset: pager.startIndex, limit: pager.pageSize };
         let data = {};
-        console.log("payload", payload)
         if (searchQuery !== "") {
             payload["query_id"] = searchQuery;
             data = await searchAllPolicies(payload);
@@ -77,11 +75,6 @@ function Insurance(props) {
         payload["count"] = data["count"];
         setPaginationData(payload)
         setPolicies(data);
-    }
-
-    const handleEdit = (policy) => {
-        console.log("policy", policy)
-
     }
 
     // useEffect(() => {
@@ -101,13 +94,11 @@ function Insurance(props) {
                     onChange={policySearch}
                 />
             </div>
-            {console.log("paginationData", paginationData)}
             <InsuranceTable
                 data={policies}
                 loadingData={loadingData}
                 paginationData={paginationData}
                 paginationHandling={paginationHandling}
-                handleEdit={handleEdit}
             />
         </div>
     )

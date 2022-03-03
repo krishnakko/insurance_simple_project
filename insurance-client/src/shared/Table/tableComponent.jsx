@@ -20,7 +20,6 @@ export default function TableComponent(props) {
 
     return (
         <div className="tableTopDiv">
-            {console.log("props.loadingData", props.loadingData)}
 
 
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>

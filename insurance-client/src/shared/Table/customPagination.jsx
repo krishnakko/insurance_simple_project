@@ -54,7 +54,6 @@ const useStyles = styles.makeStyles((theme) =>
 );
 
 export function CustomPagination(props) {
-    // console.log("paginationData**", props.paginationData);
     const classes = useStyles();
     const [pageSize, setPageSize] = useState(10);
     const pageSizes = [5, 10, 25, 50, 100];
@@ -81,9 +80,7 @@ export function CustomPagination(props) {
         }
         pageSizeN = pgData.limit;
         setPageSize(pageSizeN);
-        console.log("pagerObj pgData.count, currentPage, pageSizeN", pgData.count, currentPage, pageSizeN)
         const pagerObj = getPager(pgData.count, currentPage, pageSizeN);
-        console.log("pagerObj", pagerObj)
         setPager(pagerObj);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.paginationData])

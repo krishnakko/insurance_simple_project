@@ -89,7 +89,6 @@ export default function AddOrEditPolicy(props) {
         let finVales = { ...values };
         if (action === "edit") {
             Object.entries(values).forEach(([key, value]) => {
-                console.log("key", key, value)
                 if (value === policyData[key]) {
                     delete finVales[key];
                 }
@@ -98,13 +97,10 @@ export default function AddOrEditPolicy(props) {
         return finVales;
     }
     const toAddOrEditPolicySubmit = async (values) => {
-        console.log("values", values);
         const payload = getModifiedValues(values);
-        console.log("payload", payload);
         if (action === "edit") {
             setIsLoading(true);
             const updated = await updatePolicy(policyID, payload);
-            console.log("updated", updated);
             if (updated["data"]) {
                 setIsLoading(false);
                 navigateToPolicyTable();
@@ -114,7 +110,6 @@ export default function AddOrEditPolicy(props) {
     useEffect(() => {
         setLoader(true);
         getPolicyDetails(policyID).then(data => {
-            console.log("data", data)
             setPolicyData(data["data"]);
             setInitialValues(data["data"]);
             const splitRange = data["data"]["customer_income_group"].split("-")
@@ -151,7 +146,6 @@ export default function AddOrEditPolicy(props) {
 
     return (
         <React.Fragment>
-            {console.log("policyDetails", policyData, initialValues)}
             <div className="policyMainDiv">
                 {isLoading ? <LoadingView /> : ""}
                 <div className="breadcrumbNav">
