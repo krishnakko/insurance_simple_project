@@ -1,23 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useParams } from "react-router-dom";
-
-import * as styles from '@material-ui/core/styles';
 import * as core from '@material-ui/core';
+import * as styles from '@material-ui/core/styles';
 import * as icons from '@material-ui/icons';
-import { Formik, Form, getIn, ErrorMessage } from "formik";
-import { useHistory } from "react-router-dom";
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
+import { ErrorMessage, Form, Formik, getIn } from "formik";
+import React, { useEffect, useState } from 'react';
+import { useHistory, useLocation, useParams } from "react-router-dom";
 import * as Yup from 'yup';
-import * as _ from 'lodash';
-
-import './policyAddOrEdit.scss'
-import { LoadingView } from '../../Loader/loader';
 import { getPolicyDetails, updatePolicy } from '../../../requests';
+import { LoadingView } from '../../Loader/loader';
+import './policyAddOrEdit.scss';
+
 // let selProductId = "";
 
 const yupValidationSchema = Yup.object().shape({
     customer_id: Yup.number().required('Customer ID can not be blank'),
     premium: Yup.number().max(1000000).required('Required'),
 })
+
+function valuetext(value) {
+    return `${value}°C`;
+}
 
 
 
@@ -60,20 +63,22 @@ export default function AddOrEditPolicy(props) {
     const { policyId } = useParams();
     let history = useHistory();
     const policyID = parseInt(window.atob(policyId))
-    console.log("state", location, policyId, policyID)
     // const orgDetails = props.orgDetails;
     const { action } = props;
-    const booleanSelect = [
-        { label: "Enable", value: true },
-        { label: "Disable", value: false }
-    ]
-    const genders = ["Male", "Female", "Other"]
+    const classes = useStyles();
+
 
     const [initialValues, setInitialValues] = useState({});
     const [policyData, setPolicyData] = useState({});
     const [loader, setLoader] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-    const classes = useStyles();
+    const [incomeRange, setIncomeRange] = React.useState([20, 37]);
+
+    const booleanSelect = [
+        { label: "Enable", value: true },
+        { label: "Disable", value: false }
+    ];
+    const genders = ["Male", "Female", "Other"];
 
 
     const navigateToPolicyTable = () => {
@@ -111,6 +116,9 @@ export default function AddOrEditPolicy(props) {
             console.log("data", data)
             setPolicyData(data["data"]);
             setInitialValues(data["data"]);
+            const splitRange = data["data"]["customer_income_group"].split("-")
+            const range = [parseInt(splitRange[0].replace("$", "")), parseInt(splitRange[1].replace(/[^\d.-]/g, ""))]
+            setIncomeRange(range)
             setLoader(false);
         })
     }, [policyID])
@@ -125,8 +133,8 @@ export default function AddOrEditPolicy(props) {
                 </div>
                 <div className="pageTitle">
                     {action === "create" ?
-                        <h3>Add Policy</h3> :
-                        <h3>Edit Policy</h3>
+                        <h3>Add policy Details</h3> :
+                        <h3>Edit policy Details</h3>
                     }
                 </div>
                 <div className="policyFormDiv input_MUI_div_border_color">
@@ -375,19 +383,57 @@ export default function AddOrEditPolicy(props) {
                                                     </div>
                                                 </div>
                                                 <div className="rowDiv">
-                                                    <div className="rowRight">
+                                                    <div className="rowLeft">
                                                         <styles.ThemeProvider theme={theme2}>
                                                             <core.TextField
+                                                                disabled
+                                                                required
+                                                                type="date"
+                                                                id="date_of_purchase"
+                                                                label="Date of purchase"
+                                                                variant="outlined"
+                                                                name="date_of_purchase"
+                                                                value={values.date_of_purchase}
+                                                                InputLabelProps={{
+                                                                    shrink: true
+                                                                }}
+                                                            // onBlur={handleBlur}
+                                                            />
+                                                        </styles.ThemeProvider>
+                                                    </div>
+
+                                                    <div className="firstPartDiv">
+                                                        <styles.ThemeProvider theme={theme2}>
+                                                            <core.TextField
+                                                                disabled
                                                                 autoComplete="off"
                                                                 id="customer-income-group"
                                                                 label="Customer Income Group"
                                                                 variant="outlined"
                                                                 name="customer_income_group"
                                                                 value={values.customer_income_group}
-                                                                onChange={handleChange}
+                                                                // onChange={handleChange}
                                                                 onBlur={handleBlur}
                                                             />
                                                         </styles.ThemeProvider>
+                                                    </div>
+                                                    <div className="rowRight">
+                                                        <Box sx={{ width: 300 }}>
+                                                            <label>Select Income Range</label>
+                                                            <Slider
+                                                                max={500}
+                                                                getAriaLabel={() => 'Income Group'}
+                                                                value={incomeRange}
+                                                                onChange={(event, value) => {
+                                                                    setIncomeRange(value);
+                                                                    const range = "$" + value[0] + " - $" + value[1] + "K";
+                                                                    setFieldValue("customer_income_group", range);
+                                                                }}
+                                                                valueLabelDisplay="auto"
+                                                                getAriaValueText={valuetext}
+                                                            />
+                                                        </Box>
+
                                                     </div>
                                                 </div>
                                                 <div className="rowDiv">
