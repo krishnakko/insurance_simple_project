@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Switch } from "react-router-dom";
+import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import '@fortawesome/fontawesome-free/css/all.min.css'; import
-  'bootstrap-css-only/css/bootstrap.min.css'; import
-  'mdbreact/dist/css/mdb.css';
+// import '@fortawesome/fontawesome-free/css/all.min.css'; 
+// import 'bootstrap-css-only/css/bootstrap.min.css'; 
+// import 'mdbreact/dist/css/mdb.css';
 
 const history = createBrowserHistory({ basename: "/" });
 ReactDOM.render(

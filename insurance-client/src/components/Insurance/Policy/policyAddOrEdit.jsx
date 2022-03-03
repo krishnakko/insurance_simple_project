@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 import { ErrorMessage, Form, Formik, getIn } from "formik";
 import React, { useEffect, useState } from 'react';
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import * as Yup from 'yup';
 import { getPolicyDetails, updatePolicy } from '../../../requests';
 import { LoadingView } from '../../Loader/loader';
@@ -59,7 +59,6 @@ const theme2 = styles.createMuiTheme({
 
 
 export default function AddOrEditPolicy(props) {
-    const location = useLocation();
     const { policyId } = useParams();
     let history = useHistory();
     const policyID = parseInt(window.atob(policyId))
