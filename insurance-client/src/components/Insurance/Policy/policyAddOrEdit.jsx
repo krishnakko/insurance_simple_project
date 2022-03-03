@@ -14,12 +14,20 @@ import { Route, useHistory } from "react-router-dom";
 import * as Yup from 'yup';
 import * as _ from 'lodash';
 import moment from "moment";
+
 import './policyAddOrEdit.scss'
 import { LoadingView } from '../../Loader/loader';
-import { getPolicyDetails } from '../../../requests';
+import { getPolicyDetails, updatePolicy } from '../../../requests';
 // let selProductId = "";
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
+
+function valuetext(value) {
+    return `${value}°C`;
+}
 
 const yupValidationSchema = Yup.object().shape({
+    customer_id: Yup.number().required('Customer ID can not be blank'),
     premium: Yup.number().max(1000000).required('Required'),
 })
 
@@ -105,7 +113,12 @@ export default function AddOrEditPolicy(props) {
     const policyID = parseInt(window.atob(policyId))
     console.log("state", location, policyId, policyID)
     // const orgDetails = props.orgDetails;
-    const { poolEditFrom, action, poolId } = props;
+    const { action } = props;
+    const booleanSelect = [
+        { label: "Enable", value: true },
+        { label: "Disable", value: false }
+    ]
+    const genders = ["Male", "Female", "Other"]
 
     const [initialValues, setInitialValues] = useState({});
     const [policyData, setPolicyData] = useState({});
@@ -116,11 +129,38 @@ export default function AddOrEditPolicy(props) {
 
 
     const navigateToPolicyTable = () => {
-        console.log("policyyyy")
         history.push('/')
     }
-    function toAddOrEditPolicySubmit(values) {
+    const getModifiedValues = (values) => {
+        let finVales = { ...values };
+        if (action === "edit") {
+            Object.entries(values).forEach(([key, value]) => {
+                console.log("key", key, value)
+                if (value === policyData[key]) {
+                    delete finVales[key];
+                }
+            });
+        }
+        return finVales;
+    }
+    const toAddOrEditPolicySubmit = async (values) => {
         console.log("values", values);
+        const payload = getModifiedValues(values);
+        console.log("payload", payload);
+        if (action === "edit") {
+            setIsLoading(true);
+            const updated = await updatePolicy(policyID, payload);
+            console.log("updated", updated);
+            if (updated["data"]) {
+                setIsLoading(false);
+                navigateToPolicyTable();
+            }
+
+            // updated.then(data => {
+            //     setIsLoading(false);
+            //     history.push('/');
+            // })
+        }
     }
     useEffect(() => {
         setLoader(true);
@@ -192,36 +232,40 @@ export default function AddOrEditPolicy(props) {
                                                             />
 
                                                         </styles.ThemeProvider>
-                                                        {/* <ErrorMessage
-                                                        name="userdetails.rowLeft"
-                                                        component="span"
-                                                        className={`error-message
-                                                        ${values.userdetails.rowLeft === "" ? "displayNone" : ""}
-                                                    `}
-                                                    /> */}
+                                                        <ErrorMessage
+                                                            name="customer_id"
+                                                            component="span"
+                                                            className={`error-message`}
+                                                        />
                                                     </div>
-                                                    <div className="rowMiddle">
-                                                        <styles.ThemeProvider theme={theme2}>
-                                                            <core.TextField
-                                                                autoComplete="off"
+                                                    <div className="classTypeDropdown firstPartDiv">
+                                                        <core.FormControl variant="outlined" className={`${classes.formControl}`}>
+                                                            <core.InputLabel id="demo-simple-select-outlined-label">Vehicle Segment</core.InputLabel>
+                                                            <core.Select
+                                                                labelId="demo-simple-select-outlined-label"
                                                                 id="vehicle-segment"
-                                                                label="Vehicle Segment"
-                                                                variant="outlined"
                                                                 name="vehicle_segment"
+                                                                label="Vehicle Segment"
                                                                 value={values.vehicle_segment}
                                                                 onChange={handleChange}
                                                                 onBlur={handleBlur}
-                                                            />
+                                                                className={`dropdownMUI
+                                                                                ${getIn(errors, "vehicle_segment") &&
+                                                                        getIn(touched, "vehicle_segment")
+                                                                        ? "requiredError"
+                                                                        : ""}
+                                                                            `}
+                                                            >
+                                                                {
+                                                                    ["A", "B", "C"].map((val, idx) => {
+                                                                        return <core.MenuItem key={idx} value={val}>{val}</core.MenuItem>
+                                                                    })
+                                                                }
 
-                                                        </styles.ThemeProvider>
-                                                        {/* <ErrorMessage
-                                                        name="userdetails.rowLeft"
-                                                        component="span"
-                                                        className={`error-message
-                                                        ${values.userdetails.rowLeft === "" ? "displayNone" : ""}
-                                                    `}
-                                                    /> */}
+                                                            </core.Select>
+                                                        </core.FormControl>
                                                     </div>
+
                                                     <div className="rowRight">
                                                         <styles.ThemeProvider theme={theme2}>
                                                             <core.TextField
@@ -235,39 +279,10 @@ export default function AddOrEditPolicy(props) {
                                                                 onBlur={handleBlur}
                                                             />
                                                         </styles.ThemeProvider>
-                                                        {/* <ErrorMessage
-                                                        name="userdetails.rowRight"
-                                                        component="span"
-                                                        className={`error-message
-                                                    ${values.userdetails.rowRight === "" ? "displayNone" : ""}
-                                        `}
-                                                    /> */}
                                                     </div>
                                                 </div>
                                                 <div className="rowDiv">
                                                     <div className="rowLeft">
-                                                        <styles.ThemeProvider theme={theme2}>
-                                                            <core.TextField
-                                                                autoComplete="off"
-                                                                id="vehicle-segment"
-                                                                label="Vehicle Segment"
-                                                                variant="outlined"
-                                                                name="vehicle_segment"
-                                                                value={values.vehicle_segment}
-                                                                onChange={handleChange}
-                                                                onBlur={handleBlur}
-                                                            />
-
-                                                        </styles.ThemeProvider>
-                                                        {/* <ErrorMessage
-                                                        name="userdetails.rowLeft"
-                                                        component="span"
-                                                        className={`error-message
-                                                        ${values.userdetails.rowLeft === "" ? "displayNone" : ""}
-                                                    `}
-                                                    /> */}
-                                                    </div>
-                                                    <div className="rowRight">
                                                         <styles.ThemeProvider theme={theme2}>
                                                             <core.TextField
                                                                 autoComplete="off"
@@ -280,128 +295,143 @@ export default function AddOrEditPolicy(props) {
                                                                 onBlur={handleBlur}
                                                             />
                                                         </styles.ThemeProvider>
-                                                        {/* <ErrorMessage
-                                                        name="userdetails.rowRight"
-                                                        component="span"
-                                                        className={`error-message
-                                                    ${values.userdetails.rowRight === "" ? "displayNone" : ""}
-                                        `}
-                                                    /> */}
+                                                        <ErrorMessage
+                                                            name="premium"
+                                                            component="span"
+                                                            className={`error-message`}
+                                                        />
                                                     </div>
-                                                </div>
-                                                <div className="rowDiv">
-                                                    <div className="rowLeft">
-                                                        <styles.ThemeProvider theme={theme2}>
-                                                            <core.TextField
-                                                                autoComplete="off"
+                                                    <div className="classTypeDropdown firstPartDiv">
+                                                        <core.FormControl variant="outlined" className={`${classes.formControl}`}>
+                                                            <core.InputLabel id="demo-simple-select-outlined-label">Bodily Injury Liability</core.InputLabel>
+                                                            <core.Select
+                                                                labelId="demo-simple-select-outlined-label"
                                                                 id="bodily-injury-liability"
-                                                                label="Bodily Injury Liability"
-                                                                variant="outlined"
                                                                 name="bodily_injury_liability"
+                                                                label="Bodily Injury Liability"
                                                                 value={values.bodily_injury_liability}
                                                                 onChange={handleChange}
                                                                 onBlur={handleBlur}
-                                                            />
+                                                                className={`dropdownMUI
+                                                                                ${getIn(errors, "bodily_injury_liability") &&
+                                                                        getIn(touched, "bodily_injury_liability")
+                                                                        ? "requiredError"
+                                                                        : ""}
+                                                                            `}
+                                                            >
+                                                                {
+                                                                    booleanSelect.map((status, idx) => {
+                                                                        return <core.MenuItem key={idx} value={status.value}>{status.label}</core.MenuItem>
+                                                                    })
+                                                                }
 
-                                                        </styles.ThemeProvider>
-                                                        {/* <ErrorMessage
-                                                        name="userdetails.rowLeft"
-                                                        component="span"
-                                                        className={`error-message
-                                                        ${values.userdetails.rowLeft === "" ? "displayNone" : ""}
-                                                    `}
-                                                    /> */}
+                                                            </core.Select>
+                                                        </core.FormControl>
                                                     </div>
-                                                    <div className="rowRight">
-                                                        <styles.ThemeProvider theme={theme2}>
-                                                            <core.TextField
-                                                                autoComplete="off"
+                                                    <div className="classTypeDropdown firstPartDiv rowRight">
+                                                        <core.FormControl variant="outlined" className={`${classes.formControl}`}>
+                                                            <core.InputLabel id="demo-simple-select-outlined-label">Personal Injury Protection</core.InputLabel>
+                                                            <core.Select
+                                                                labelId="demo-simple-select-outlined-label"
                                                                 id="personal-injury-protection"
+                                                                name="personal_injury_protection"
                                                                 label="Personal Injury Protection"
-                                                                variant="outlined"
-                                                                name="personal-injury-protection"
                                                                 value={values.personal_injury_protection}
                                                                 onChange={handleChange}
                                                                 onBlur={handleBlur}
-                                                            />
-                                                        </styles.ThemeProvider>
-                                                        {/* <ErrorMessage
-                                                        name="userdetails.rowRight"
-                                                        component="span"
-                                                        className={`error-message
-                                                    ${values.userdetails.rowRight === "" ? "displayNone" : ""}
-                                        `}
-                                                    /> */}
+                                                                className={`dropdownMUI ${getIn(errors, "personal_injury_protection") &&
+                                                                    getIn(touched, "personal_injury_protection")
+                                                                    ? "requiredError"
+                                                                    : ""}`}
+                                                            >
+                                                                {
+                                                                    booleanSelect.map((status, idx) => {
+                                                                        return <core.MenuItem key={idx} value={status.value}>{status.label}</core.MenuItem>
+                                                                    })
+                                                                }
+
+                                                            </core.Select>
+                                                        </core.FormControl>
                                                     </div>
                                                 </div>
                                                 <div className="rowDiv">
-                                                    <div className="rowLeft">
-                                                        <styles.ThemeProvider theme={theme2}>
-                                                            <core.TextField
-                                                                autoComplete="off"
+                                                    <div className="classTypeDropdown firstPartDiv rowRight">
+                                                        <core.FormControl variant="outlined" className={`${classes.formControl}`}>
+                                                            <core.InputLabel id="demo-simple-select-outlined-label">Property Damage Liability</core.InputLabel>
+                                                            <core.Select
+                                                                labelId="demo-simple-select-outlined-label"
                                                                 id="property-damage-liability"
-                                                                label="Property Damage Liability"
-                                                                variant="outlined"
                                                                 name="property_damage_liability"
+                                                                label="Property Damage Liability"
                                                                 value={values.property_damage_liability}
                                                                 onChange={handleChange}
                                                                 onBlur={handleBlur}
-                                                            />
+                                                                className={`dropdownMUI ${getIn(errors, "property_damage_liability") &&
+                                                                    getIn(touched, "property_damage_liability")
+                                                                    ? "requiredError"
+                                                                    : ""}`}
+                                                            >
+                                                                {
+                                                                    booleanSelect.map((status, idx) => {
+                                                                        return <core.MenuItem key={idx} value={status.value}>{status.label}</core.MenuItem>
+                                                                    })
+                                                                }
 
-                                                        </styles.ThemeProvider>
-                                                        {/* <ErrorMessage
-                                                        name="userdetails.rowLeft"
-                                                        component="span"
-                                                        className={`error-message
-                                                        ${values.userdetails.rowLeft === "" ? "displayNone" : ""}
-                                                    `}
-                                                    /> */}
+                                                            </core.Select>
+                                                        </core.FormControl>
                                                     </div>
-                                                    <div className="rowRight">
-                                                        <styles.ThemeProvider theme={theme2}>
-                                                            <core.TextField
-                                                                autoComplete="off"
+                                                    <div className="classTypeDropdown firstPartDiv">
+                                                        <core.FormControl variant="outlined" className={`${classes.formControl}`}>
+                                                            <core.InputLabel id="demo-simple-select-outlined-label">Collision</core.InputLabel>
+                                                            <core.Select
+                                                                labelId="demo-simple-select-outlined-label"
                                                                 id="collision"
-                                                                label="Collision"
-                                                                variant="outlined"
                                                                 name="collision"
+                                                                label="Collision"
                                                                 value={values.collision}
                                                                 onChange={handleChange}
                                                                 onBlur={handleBlur}
-                                                            />
-                                                        </styles.ThemeProvider>
-                                                        {/* <ErrorMessage
-                                                        name="userdetails.rowRight"
-                                                        component="span"
-                                                        className={`error-message
-                                                    ${values.userdetails.rowRight === "" ? "displayNone" : ""}
-                                        `}
-                                                    /> */}
+                                                                className={`dropdownMUI ${getIn(errors, "collision") &&
+                                                                    getIn(touched, "collision")
+                                                                    ? "requiredError"
+                                                                    : ""}`}
+                                                            >
+                                                                {
+                                                                    booleanSelect.map((status, idx) => {
+                                                                        return <core.MenuItem key={idx} value={status.value}>{status.label}</core.MenuItem>
+                                                                    })
+                                                                }
+
+                                                            </core.Select>
+                                                        </core.FormControl>
                                                     </div>
-                                                </div>
-                                                <div className="rowDiv">
-                                                    <div className="rowLeft">
-                                                        <styles.ThemeProvider theme={theme2}>
-                                                            <core.TextField
-                                                                autoComplete="off"
+                                                    <div className="classTypeDropdown firstPartDiv rowRight">
+                                                        <core.FormControl variant="outlined" className={`${classes.formControl}`}>
+                                                            <core.InputLabel id="demo-simple-select-outlined-label">Comprehensive</core.InputLabel>
+                                                            <core.Select
+                                                                labelId="demo-simple-select-outlined-label"
                                                                 id="comprehensive"
-                                                                label="Comprehensive"
-                                                                variant="outlined"
                                                                 name="comprehensive"
+                                                                label="Comprehensive"
                                                                 value={values.comprehensive}
                                                                 onChange={handleChange}
                                                                 onBlur={handleBlur}
-                                                            />
+                                                                className={`dropdownMUI ${getIn(errors, "comprehensive") &&
+                                                                    getIn(touched, "comprehensive")
+                                                                    ? "requiredError"
+                                                                    : ""}`}
+                                                            >
+                                                                {
+                                                                    booleanSelect.map((status, idx) => {
+                                                                        return <core.MenuItem key={idx} value={status.value}>{status.label}</core.MenuItem>
+                                                                    })
+                                                                }
 
-                                                        </styles.ThemeProvider>
-                                                        {/* <ErrorMessage
-                                                        name="userdetails.rowLeft"
-                                                        component="span"
-                                                        className={`error-message
-                                                        ${values.userdetails.rowLeft === "" ? "displayNone" : ""}
-                                                    `}
-                                                    /> */}
+                                                            </core.Select>
+                                                        </core.FormControl>
                                                     </div>
+                                                </div>
+                                                <div className="rowDiv">
                                                     <div className="rowRight">
                                                         <styles.ThemeProvider theme={theme2}>
                                                             <core.TextField
@@ -447,26 +477,55 @@ export default function AddOrEditPolicy(props) {
                                                     `}
                                                     /> */}
                                                     </div>
-                                                    <div className="rowRight">
-                                                        <styles.ThemeProvider theme={theme2}>
-                                                            <core.TextField
-                                                                autoComplete="off"
+                                                    <div className="classTypeDropdown firstPartDiv">
+                                                        <core.FormControl variant="outlined" className={`${classes.formControl}`}>
+                                                            <core.InputLabel id="demo-simple-select-outlined-label">Customer gender</core.InputLabel>
+                                                            <core.Select
+                                                                labelId="demo-simple-select-outlined-label"
+                                                                id="customer-gender"
+                                                                name="customer_gender"
+                                                                label="Customer gender"
+                                                                value={values.customer_gender}
+                                                                onChange={handleChange}
+                                                                onBlur={handleBlur}
+                                                                className={`dropdownMUI ${getIn(errors, "customer_gender") &&
+                                                                    getIn(touched, "customer_gender")
+                                                                    ? "requiredError"
+                                                                    : ""}`}
+                                                            >
+                                                                {
+                                                                    genders.map((gender, idx) => {
+                                                                        return <core.MenuItem key={idx} value={gender}>{gender}</core.MenuItem>
+                                                                    })
+                                                                }
+
+                                                            </core.Select>
+                                                        </core.FormControl>
+                                                    </div>
+                                                    <div className="classTypeDropdown firstPartDiv rowRight">
+                                                        <core.FormControl variant="outlined" className={`${classes.formControl}`}>
+                                                            <core.InputLabel id="demo-simple-select-outlined-label">Customer marital status</core.InputLabel>
+                                                            <core.Select
+                                                                labelId="demo-simple-select-outlined-label"
                                                                 id="customer-marital-status"
+                                                                name="comprehensive"
                                                                 label="Customer marital status"
-                                                                variant="outlined"
-                                                                name="customer_marital_status"
                                                                 value={values.customer_marital_status}
                                                                 onChange={handleChange}
                                                                 onBlur={handleBlur}
-                                                            />
-                                                        </styles.ThemeProvider>
-                                                        {/* <ErrorMessage
-                                                        name="userdetails.rowRight"
-                                                        component="span"
-                                                        className={`error-message
-                                                    ${values.userdetails.rowRight === "" ? "displayNone" : ""}
-                                        `}
-                                                    /> */}
+                                                                className={`dropdownMUI ${getIn(errors, "customer_marital_status") &&
+                                                                    getIn(touched, "customer_marital_status")
+                                                                    ? "requiredError"
+                                                                    : ""}`}
+                                                            >
+                                                                {
+                                                                    booleanSelect.map((status, idx) => {
+                                                                        return <core.MenuItem key={idx} value={status.value}>{status.label}</core.MenuItem>
+                                                                    })
+                                                                }
+
+                                                            </core.Select>
+                                                        </core.FormControl>
                                                     </div>
                                                 </div>
                                                 <div className="addEditPolicyAction">
@@ -481,9 +540,6 @@ export default function AddOrEditPolicy(props) {
                                                                 disabled={!(isValid && dirty)}
                                                             >
                                                                 Add
-                                                                {/* {
-                                                            isLoading ? <div className="addingLoader"><SmallLoader /></div> : "Add"
-                                                        } */}
                                                             </core.Button> :
                                                             <core.Button
                                                                 className={`hoverBgButtonLinkForm`}

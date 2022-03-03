@@ -19,7 +19,7 @@ function App() {
               <Insurance />
             </Route>
             <Route exact path="/policy/:policyId/edit">
-              <AddOrEditPolicy />
+              <AddOrEditPolicy action="edit" />
             </Route>
             <Footer />
           </div>

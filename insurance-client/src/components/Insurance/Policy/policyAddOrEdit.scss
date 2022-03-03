@@ -1,6 +1,7 @@
 .policyMainDiv {
   position: relative;
   width: 1080px;
+  margin-bottom: 20px;
   // padding-left: 15px;
   > div {
     // padding: 10px 0px 10px 0px;
@@ -45,6 +46,16 @@
       justify-content: space-between;
     }
   }
+  .error-message {
+    // padding: 0px !important;
+    padding-bottom: 10px;
+    color: #e40000;
+    display: flex;
+    font-family: "NotoSans-Regular";
+    svg {
+      color: #adadad !important;
+    }
+  }
 }
 
 .rowDiv {
@@ -87,5 +98,25 @@
       opacity: 0.5;
       color: #fff;
     }
+  }
+}
+
+.firstPartDiv,
+.secondPartDiv {
+  label {
+    background: #fff;
+  }
+  > div {
+    margin: 8px 0px !important;
+    // min-width: 338px;
+    // max-width: 400px;
+    width: 338px;
+  }
+}
+
+.dropdownMUI {
+  > div {
+    font-size: 14px;
+    color: #424242;
   }
 }

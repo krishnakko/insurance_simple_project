@@ -20,3 +20,15 @@ export const getPolicyDetails = async (policyId) => {
     let data = await response.json();
     return data;
 }
+
+export const updatePolicy = async (policyId, payload) => {
+    let response = await fetch(API_PATH + "/policies/" + policyId, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    });
+    let data = await response.json();
+    return data;
+}

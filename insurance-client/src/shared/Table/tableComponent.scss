@@ -16,6 +16,7 @@
 }
 
 .editButton {
+  background-color: aliceblue !important;
   a {
     color: #686868;
     font-size: 12px;
@@ -23,5 +24,6 @@
   }
   :hover {
     background: cadetblue !important;
+    border-radius: 5px;
   }
 }
