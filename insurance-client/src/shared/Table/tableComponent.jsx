@@ -7,9 +7,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import { Link, useHistory } from "react-router-dom";
 import './tableComponent.scss';
 import { TransparentLoader } from '../../components/Loader/loader';
 import { CustomPagination } from './customPagination';
+import Button from "@material-ui/core/Button";
 
 // const columns = [
 //     { id: 'name', label: 'Name', minWidth: 170 },
@@ -65,8 +67,8 @@ export default function TableComponent(props) {
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
-                                {/* {props.name === "InsuranceTable" &&
-                                    <TableCell align="left">Actions</TableCell>} */}
+                                {props.name === "InsuranceTable" &&
+                                    <TableCell align="left">Actions</TableCell>}
                                 {columns.map((column) => (
                                     <TableCell
                                         key={column.id}
@@ -100,6 +102,18 @@ export default function TableComponent(props) {
                                                 .map((row) => {
                                                     return (
                                                         <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                                                            {props.name === "InsuranceTable" &&
+                                                                <TableCell align="right">
+                                                                    <Button aria-label="edit" className="editButton" onClick={() => props.handleEdit(row)}>
+
+                                                                        <Link to={{
+                                                                            pathname: "/policy/" + window.btoa(row.policy_id) + "/edit",
+                                                                            state: { from: "table" }
+                                                                        }}>Edit
+                                                                        </Link>
+                                                                    </Button>
+                                                                </TableCell>}
+
                                                             {columns.map((column) => {
                                                                 const value = row[column.id];
                                                                 return (

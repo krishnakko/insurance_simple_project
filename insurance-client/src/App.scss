@@ -5,10 +5,10 @@
   padding: 0 10px !important;
   border-radius: 10px;
 }
-@mixin flex-center {
-  display: flex;
-  align-items: center;
-}
+// @mixin flex-center {
+//   display: flex;
+//   align-items: center;
+// }
 .pageContainer {
   background-color: #ebebe6;
   // width: 100%;
@@ -38,4 +38,23 @@
   position: absolute;
   height: 100%;
   left: 0;
+}
+
+.breadcrumbNav {
+  // padding-bottom: 0px !important;
+  font-family: "NotoSans-Regular";
+  padding: 0px 0px 16px 0px !important;
+  button,
+  span {
+    border: none;
+    background-color: #ebebe6;
+    font-size: 13px;
+    color: #686868;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  svg {
+    font-size: larger !important;
+  }
 }

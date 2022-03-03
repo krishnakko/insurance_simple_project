@@ -1,0 +1,91 @@
+.policyMainDiv {
+  position: relative;
+  width: 1080px;
+  // padding-left: 15px;
+  > div {
+    // padding: 10px 0px 10px 0px;
+
+    span {
+      button {
+        border: none;
+        background: none;
+        font-size: 12px;
+        color: #686868;
+      }
+
+      svg {
+        // font-size: medium;
+        color: #686868;
+      }
+    }
+  }
+}
+
+.policyFormDiv {
+  background: #ffffff;
+  padding: 32px 50px;
+  // width: 95%;
+
+  input,
+  textarea {
+    font-size: 14px;
+    color: #424242;
+  }
+
+  .firstPart {
+    // padding: 1% 3%;
+    width: 700px;
+  }
+
+  .secondPartForm {
+    margin-top: 15px;
+    width: 700px;
+    > div {
+      padding-top: 10px;
+      justify-content: space-between;
+    }
+  }
+}
+
+.rowDiv {
+  display: flex;
+  justify-content: space-between;
+}
+
+.rowLeft,
+.rowRight,
+.rowMiddle,
+.userName,
+.password,
+.languagesDropdown,
+.countriesDropdown,
+.statesDropdown,
+.citiesDropdown,
+.cFEmploymentDropdown,
+.cFCourseDropdown,
+.activeStatusDropdown,
+.confirmPassword {
+  label {
+    background: #fff;
+  }
+  > div {
+    margin: 8px 0px !important;
+    // min-width: 338px !important;
+    width: 300px !important;
+  }
+}
+
+.addEditPolicyAction {
+  padding-top: 50px !important;
+  display: grid;
+  justify-content: center;
+  #actionButton {
+    background: #42babd !important;
+    margin-right: 20px !important;
+    width: 120px;
+    :hover {
+      opacity: 0.5;
+      color: #fff;
+    }
+  }
+}

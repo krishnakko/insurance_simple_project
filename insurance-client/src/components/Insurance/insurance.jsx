@@ -79,13 +79,18 @@ function Insurance(props) {
         setPolicies(data);
     }
 
+    const handleEdit = (policy) => {
+        console.log("policy", policy)
+
+    }
+
     // useEffect(() => {
     //     searchAllPolicies({ query_id: searchQuery })
     // }, [searchQuery])
 
     return (
         <div className="insuranceMainClass">
-            <span className="Header">Insurance</span>
+            {/* <span className="Header">Insurance</span> */}
             <div className="input-group tableSearch">
                 <input
                     type="text"
@@ -103,6 +108,7 @@ function Insurance(props) {
                 loadingData={loadingData}
                 paginationData={paginationData}
                 paginationHandling={paginationHandling}
+                handleEdit={handleEdit}
             />
         </div>
     )

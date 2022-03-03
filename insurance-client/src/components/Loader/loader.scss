@@ -18,3 +18,17 @@
     opacity: 1 !important;
   }
 }
+.loader-container {
+  text-align: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+  // background: rgba(0, 0, 0, 0.2);
+  background-color: rgba(66, 66, 66, 0.2);
+  width: 100%;
+  height: 100%;
+  z-index: 9999 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

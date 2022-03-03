@@ -96,6 +96,7 @@ function InsuranceTable(props) {
             loadingData={loadingData}
             paginationData={props.paginationData}
             paginationHandling={props.paginationHandling}
+            handleEdit={props.handleEdit}
         />
     );
 }

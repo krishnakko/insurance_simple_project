@@ -26,3 +26,14 @@ export const TransparentLoader = () => {
         </div>
     )
 }
+
+
+export const LoadingView = () => {
+    return (
+        <div className="loader-container">
+            <CircularProgress />
+            {/* <img src="../../../../assets/images/loader3.gif" /> */}
+        </div>
+    );
+};
+

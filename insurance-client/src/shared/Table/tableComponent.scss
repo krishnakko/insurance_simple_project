@@ -14,3 +14,14 @@
 .insideTableLoader {
   padding: 100px;
 }
+
+.editButton {
+  a {
+    color: #686868;
+    font-size: 12px;
+    text-decoration: none;
+  }
+  :hover {
+    background: cadetblue !important;
+  }
+}
