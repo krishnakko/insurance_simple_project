@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import BarChart from './charts/barChart';
 import LineChart from './charts/lineChart';
 import { getReportsData } from '../../requests';
-import { months, monthMap, chartInfo, getRandomColors } from '../../staticData/insuranceStatic';
-
+import { monthMap, chartInfo } from '../../staticData/insuranceStatic';
 import './report.scss';
 
 
@@ -32,16 +31,9 @@ function ChartReport(props) {
 
     useEffect(() => {
         const months = getMonths(apiData["data"]);
-        const colors = getRandomColors(months.length);
-        console.log("colors", colors)
         const values = apiData["data"].map(record => record.policies);
-        // let chartInfo = {
-        //     labels: months,
-        //     dataSets: [{
-        //         label: "Yearly Policy Information",
-        //         data: values
-        //     }]
-        // };
+
+        // Initializing  the chart
         let chartInfo = {
             series: [{
                 name: "Yearly Policy Information",
@@ -95,13 +87,9 @@ function ChartReport(props) {
         setChartData(chartInfo);
     }, [apiData])
 
-    const changeGraph = (type) => {
-        setReportType(type)
-    }
 
     return (
         <div className="chartTopDiv">
-            {console.log("reportType", reportType)}
             <div>
                 <span>Policies Report</span>
             </div>

@@ -16,23 +16,10 @@ engine = create_engine(os.getenv("DB_CONN_STRING"))
 
 DBSession = sessionmaker(bind=engine)
 db_session = DBSession()
-# conn = engine.connect()
-# conn.execute(
-#     "SELECT host FROM INFORMATION_SCHEMA.PROCESSLIST WHERE ID = CONNECTION_ID()").fetchall()
-# DBSession.add_all()
 
 
 class RunMaintenance:
-    def __init__(self):
-        self.db_session = ""
-
-    def set_session(self):
-        con_string = os.getenv("DB_CONN_STRING")
-        print("con_string", con_string)
-        # engine = create_engine(con_string)
-        # Base.metadata.bind = engine
-        # DBSession = sessionmaker(bind=engine)
-        # self.db_session = DBSession()
+    """Running necessary maintenance tasks"""
 
     def runBasedata(self, sql):
         pass
@@ -46,15 +33,9 @@ class RunMaintenance:
             db_session.close()
 
     def run_model_data_bulk_insert(self, model, records):
-        # objects = []
-        # # print("model", model)
-        # dicts = [dict(bar=t[0], fly=t[1]) for t in records]
-
         for record in records:
             record["date_of_purchase"] = datetime.strptime(
                 record["date_of_purchase"], '%m/%d/%Y')
-        #     objects.append(model(record))
-        # print(":objects:", objects)
         try:
             db_session.bulk_insert_mappings(model, records)
             # db_session.add_all(objects)
@@ -67,9 +48,8 @@ class RunMaintenance:
 
 
 if __name__ == '__main__':
-    print("Running...")
+    """Initiating necessary data insertion actions."""
     m1 = RunMaintenance()
-    m1.set_session()
     policy_data = get_data_from_csv(
         "Data Set - Insurance Client.csv")
     # print("policy_data", policy_data)

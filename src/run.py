@@ -11,7 +11,7 @@ CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DB_CONN_STRING")
 app.config['SECRET_KEY'] = "krishna971"
 
-
+# Initiating db connection to database
 db = SQLAlchemy(app)
 
 
@@ -59,10 +59,12 @@ class Policy(db.Model):
 
 
 def convert_date(date):
+    """Converting date to string of date"""
     return date.strftime("%Y-%m-%d")
 
 
 def return_multi_records(records):
+    """Returning multiple records by some filtration"""
     return_list = []
     for rec in records:
         record = rec.__dict__
@@ -73,6 +75,7 @@ def return_multi_records(records):
 
 
 def return_record(rec, ref=False):
+    """Returning single record by some filtration"""
     record = rec.__dict__
     record["date_of_purchase"] = convert_date(record["date_of_purchase"])
     if ref:
@@ -91,6 +94,7 @@ def dict_fetchall(records):
 
 @app.route('/policies', methods=['GET'])
 def get_all_policies():
+    """Getting all policies based on pagination"""
     offset = request.args["offset"] if "offset" in request.args else 0
     limit = request.args["limit"] if "limit" in request.args else 25
     no_limit = request.args["no_limit"] if "no_limit" in request.args else 0
@@ -111,6 +115,7 @@ def get_all_policies():
 
 @app.route('/policies/<int:policy_id>', methods=['GET'])
 def get_policy(policy_id):
+    """Getting single policy using policy_id"""
     policy = Policy.query.get(policy_id)
     if policy:
         return {"data": return_record(policy)}
@@ -119,6 +124,7 @@ def get_policy(policy_id):
 
 @app.route('/policies/<int:policy_id>', methods=['PUT'])
 def update_policy(policy_id):
+    """Updating single policy using policy_id and new data"""
     payload = json.loads(request.data)
     policy = Policy.query.get(policy_id)
     if "premium" in payload:
@@ -163,6 +169,7 @@ def update_policy(policy_id):
 
 @app.route('/policies/search', methods=['GET'])
 def search_policy():
+    """Searching policies using id on the fields policy_id, customer_id"""
     if "query_id" not in request.args:
         return {"error": "query_id param is missing"}
     offset = request.args["offset"] if "offset" in request.args else 0
@@ -188,6 +195,7 @@ def search_policy():
 
 @app.route('/policies/report', methods=['GET'])
 def reports_by_month():
+    """Getting data for reports purpose"""
     query = """SELECT strftime('%Y-%m', date_of_purchase) year_month, count(policy_id) as policies
                  FROM policy group by year_month order by year_month;"""
     resp_data = db.session.execute(query).fetchall()
@@ -200,5 +208,6 @@ def reports_by_month():
 
 
 if __name__ == '__main__':
+    """Initiating the app by creating necessary tables if not exist and running the app"""
     db.create_all()
     app.run('0.0.0.0', port=9000, debug=True)
