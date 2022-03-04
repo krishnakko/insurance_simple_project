@@ -18,21 +18,21 @@ services:
             - "9090:9000"
         tty: true
         restart: always
-    client:
-        container_name: react-client
-        build:
-            context: .
-            dockerfile: DockerfileReact
-        image: unsurance-client
-        volumes:
-            - '.:/app'
-            - '/app/node_modules'
-        ports:
-            - "3000:80"
-            - "3001:3000"
-        environment:
-            - ENV=development
-            - API_PATH="http://127.0.0.1:9090"
+    # client:
+    #     container_name: react-client
+    #     build:
+    #         context: .
+    #         dockerfile: DockerfileReact
+    #     image: unsurance-client
+    #     volumes:
+    #         - '.:/app'
+    #         - '/app/node_modules'
+    #     ports:
+    #         - "3000:80"
+    #         - "3001:3000"
+    #     environment:
+    #         - ENV=development
+    #         - API_PATH="http://127.0.0.1:9090"
 
     # mysql-testing:
     #     image: mysql:8.0
