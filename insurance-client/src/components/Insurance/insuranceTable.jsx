@@ -34,11 +34,6 @@ function InsuranceTable(props) {
 
             },
             {
-                label: 'Customer Income Group',
-                id: 'customer_income_group',
-                minWidth: 180,
-            },
-            {
                 label: 'Vehicle Segment',
                 id: 'vehicle_segment',
                 minWidth: 150,

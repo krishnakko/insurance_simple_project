@@ -48,7 +48,7 @@ const useStyles = styles.makeStyles((theme) =>
 );
 
 
-const theme2 = styles.createMuiTheme({
+const theme2 = styles.createTheme({
     palette: {
         primary: {
             main: "#42BABD"

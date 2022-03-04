@@ -1,4 +1,4 @@
-import { InputBase, TextField } from '@material-ui/core';
+import { InputBase } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
@@ -167,8 +167,8 @@ export function CustomPagination(props) {
                                 input={<BootstrapInput />}
                             >
                                 {
-                                    pageSizes.map((size) => {
-                                        return <MenuItem value={size} >{size}</MenuItem>
+                                    pageSizes.map((size, idx) => {
+                                        return <MenuItem key={idx} value={size} >{size}</MenuItem>
                                     })
                                 }
                             </Select>

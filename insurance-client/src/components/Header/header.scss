@@ -3,6 +3,32 @@
   margin: 32px 0px;
   nav {
     display: flex;
-    justify-content: center;
+    padding-left: 10px;
+    // justify-content: center;
+  }
+  .navRight,
+  .navLeft {
+    ul {
+      display: flex;
+      flex-direction: row;
+      li {
+        margin-left: 10px;
+        margin-right: 10px;
+        a {
+          font-size: 14px;
+          font-weight: bold;
+        }
+      }
+    }
+    a {
+      // color: #fff;
+      color: rgba(0, 0, 0, 0.77);
+      text-decoration: none;
+      &:hover {
+        color: rgb(66, 186, 189) !important;
+        // opacity: 0.8;
+        text-decoration: none;
+      }
+    }
   }
 }

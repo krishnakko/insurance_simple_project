@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="footerWrapper">
             <div className="footer">
                 <div className="leftDiv">
-                    <CopyrightIcon className="copyRight" /><span>2010 - {currentYear}</span>
+                    <CopyrightIcon className="copyRight" /><span>{currentYear}</span>
                 </div>
 
                 <div className="rightDiv">

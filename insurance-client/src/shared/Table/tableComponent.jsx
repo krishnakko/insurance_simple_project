@@ -28,9 +28,9 @@ export default function TableComponent(props) {
                             <TableRow>
                                 {props.name === "InsuranceTable" &&
                                     <TableCell align="left">Actions</TableCell>}
-                                {columns.map((column) => (
+                                {columns.map((column, idx) => (
                                     <TableCell
-                                        key={column.id}
+                                        key={idx}
                                         align={column.align}
                                         style={{ minWidth: column.minWidth }}
                                     >
@@ -58,9 +58,9 @@ export default function TableComponent(props) {
                                         </React.Fragment>
                                         : <React.Fragment>
                                             {records
-                                                .map((row) => {
+                                                .map((row, idx) => {
                                                     return (
-                                                        <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                                                        <TableRow hover role="checkbox" tabIndex={-1} key={idx}>
                                                             {props.name === "InsuranceTable" &&
                                                                 <TableCell align="right">
                                                                     <Button aria-label="edit" className="editButton" onClick={() => props.handleEdit(window.btoa(row.policy_id))}>

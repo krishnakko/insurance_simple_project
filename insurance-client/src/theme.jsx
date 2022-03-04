@@ -1,6 +1,6 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createTheme } from "@material-ui/core/styles";
 
-const Apptheme = createMuiTheme({
+const AppTheme = createTheme({
     typography: {
         button: {
             textTransform: "none",
@@ -23,4 +23,4 @@ const Apptheme = createMuiTheme({
     },
 });
 
-export default Apptheme;
+export default AppTheme;
