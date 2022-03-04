@@ -188,7 +188,7 @@ def search_policy():
 
 @app.route('/policies/report', methods=['GET'])
 def reports_by_month():
-    query = """SELECT strftime('%Y-%m', date_of_purchase) year_month, count(policy_id)
+    query = """SELECT strftime('%Y-%m', date_of_purchase) year_month, count(policy_id) as policies
                  FROM policy group by year_month order by year_month;"""
     resp_data = db.session.execute(query).fetchall()
     report_data = dict_fetchall(resp_data)

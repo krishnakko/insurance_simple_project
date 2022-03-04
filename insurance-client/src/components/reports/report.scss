@@ -1,0 +1,47 @@
+.chartTopDiv {
+  //   display: flex;
+  //   justify-content: center;
+  > div:first-child {
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+  }
+  .viewBy {
+    display: flex;
+    justify-content: center;
+    margin: 32px 0px;
+    > span {
+      padding: 0px 32px;
+      margin: 10px;
+    }
+    > span:not(:first-child) {
+      cursor: pointer;
+      &:hover {
+        color: rgb(66, 186, 189) !important;
+        // opacity: 0.8;
+        // text-decoration: none;
+      }
+    }
+  }
+  > span:first-child {
+    font-size: 15px;
+  }
+  .policyChart {
+    display: flex;
+    justify-content: center;
+    overflow: scroll;
+    > div {
+      width: 600px !important;
+      height: 320px !important;
+    }
+  }
+}
+
+// @media (max-width: 600px) {
+//   .policyChart {
+//     > div {
+//       //   width: 400px !important;
+//       //   height: 320px;
+//     }
+//   }
+// }

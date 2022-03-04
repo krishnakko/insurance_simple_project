@@ -6,7 +6,7 @@ import AppTheme from "./theme";
 import Footer from './components/Footer/footer';
 import AddOrEditPolicy from './components/Insurance/Policy/policyAddOrEdit';
 import Header from './components/Header/header';
-// import ChartReport from './components/reports/report'
+import ChartReport from './components/reports/report';
 
 
 function App() {
@@ -23,9 +23,9 @@ function App() {
               <Route exact path="/policy/:policyId/edit">
                 <AddOrEditPolicy action="edit" />
               </Route>
-              {/* <Route exact path="/policy/report">
+              <Route exact path="/policy/report">
                 <ChartReport />
-              </Route> */}
+              </Route>
             </Switch>
           </div>
         </header>

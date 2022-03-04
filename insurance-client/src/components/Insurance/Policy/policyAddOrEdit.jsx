@@ -72,17 +72,6 @@ export default function AddOrEditPolicy(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [incomeRange, setIncomeRange] = React.useState([20, 37]);
 
-    const booleanSelect = [
-        { label: "Enable", value: true },
-        { label: "Disable", value: false }
-    ];
-    const maritalStatus = [
-        { label: "Married", value: true },
-        { label: "Unmarried", value: false }
-    ];
-    const genders = ["Male", "Female", "Other"];
-
-
     const navigateToPolicyTable = () => {
         history.push('/')
     }

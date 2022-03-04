@@ -29,3 +29,9 @@ export const updatePolicy = async (policyId, payload) => {
     let data = await response.json();
     return data;
 }
+
+export const getReportsData = async () => {
+    let response = await fetch(API_PATH + "/policies/report");
+    let data = await response.json();
+    return data;
+}

@@ -44,8 +44,8 @@
   span {
     border: none;
     // background-color: #ebebe6;
-    font-size: 13px;
-    color: #686868;
+    font-size: 15px !important;
+    color: #0e0808 !important;
     &:hover {
       text-decoration: underline;
     }
@@ -53,4 +53,8 @@
   svg {
     font-size: larger !important;
   }
+}
+
+.active {
+  color: rgb(66, 186, 189) !important;
 }
